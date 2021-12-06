@@ -1,0 +1,67 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --color-normal: beige;
+  --color-fire: orange;
+  --color-water: blue;
+  --color-grass: green;
+  --color-electric: yellow;
+  --color-ice: skyblue;
+  --color-fighting: brown;
+  --color-poison: purple;
+  --color-ground: khaki;
+  --color-flying: lilac;
+  --color-psychic: pink;
+  --color-bug: lightgreen;
+  --color-rock: olive;
+  --color-ghost: purple;
+  --color-dark: lightbrown;
+  --color-dragon: lightpurple;
+  --color-steel: steel;
+  --color-fairy: lightpink;
+}
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+}
+
+.pokedex {
+  display: flex;
+  flex-direction: column;
+  width: 35rem;
+  height: 50rem;
+
+  align-items: center;
+  justify-content: center;
+}
+
+#type__list,
+#stats__list {
+  display: flex;
+  list-style-type: none;
+  justify-content: center;
+}
+
+#type__list li,
+#stats__list li {
+  margin: 1rem;
+}
+
+#type__list li {
+  padding: 0.5rem 2rem;
+  border-radius: 1.5rem;
+  background: var(--color-fire);
+}
+
+img {
+  height: 10rem;
+}
