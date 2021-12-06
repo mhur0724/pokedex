@@ -5,24 +5,28 @@
 }
 
 :root {
-  --color-normal: beige;
-  --color-fire: orange;
-  --color-water: blue;
-  --color-grass: green;
-  --color-electric: yellow;
-  --color-ice: skyblue;
-  --color-fighting: brown;
-  --color-poison: purple;
-  --color-ground: khaki;
-  --color-flying: lilac;
-  --color-psychic: pink;
-  --color-bug: lightgreen;
-  --color-rock: olive;
-  --color-ghost: purple;
-  --color-dark: lightbrown;
-  --color-dragon: lightpurple;
-  --color-steel: steel;
-  --color-fairy: lightpink;
+  --color-normal: #a8a77a;
+  --color-fire: #ee8130;
+  --color-water: #6390f0;
+  --color-grass: #7ac74c;
+  --color-electric: #f7d02c;
+  --color-ice: #96d9d6;
+  --color-fighting: #c22e28;
+  --color-poison: #a33ea1;
+  --color-ground: #e2bf65;
+  --color-flying: #a98ff3;
+  --color-psychic: #f95587;
+  --color-bug: #a6b91a;
+  --color-rock: #b6a136;
+  --color-ghost: #735797;
+  --color-dark: #705746;
+  --color-dragon: #6f35fc;
+  --color-steel: #b7b7ce;
+  --color-fairy: #d685ad;
+}
+
+.hidden {
+  display: none;
 }
 body {
   display: flex;
@@ -44,6 +48,9 @@ body {
   justify-content: center;
 }
 
+#pokemon:focus {
+  outline: none;
+}
 #type__list,
 #stats__list {
   display: flex;
@@ -51,17 +58,40 @@ body {
   justify-content: center;
 }
 
-#type__list li,
-#stats__list li {
+#stats__list {
+  flex-direction: column;
+}
+
+.stats__list__item {
+  display: flex;
+}
+.stats__list__item p {
+  margin-right: 1rem;
+}
+
+.stats__list__item p:first-child {
+  width: 7rem;
+  border: 1px solid black;
+}
+.stats__list__item p:last-child {
+  border: 1px solid black;
+  width: 255px;
+}
+
+#type__list li {
   margin: 1rem;
 }
 
 #type__list li {
   padding: 0.5rem 2rem;
   border-radius: 1.5rem;
-  background: var(--color-fire);
+  color: white;
 }
 
 img {
   height: 10rem;
+}
+
+.image-div {
+  background-color: var(--color-rock);
 }
