@@ -34,6 +34,7 @@ body {
   align-items: center;
   height: 100vh;
   width: 100vw;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .pokedex {
@@ -105,6 +106,7 @@ form {
 }
 #searchInput {
   width: 9rem;
+  border: none;
 }
 .profile {
   width: 100%;
@@ -113,7 +115,8 @@ form {
 .identifier {
   display: flex;
   justify-content: space-between;
-  width: 12rem;
+  min-width: 12rem;
+
   background: white;
   border-radius: 0.25rem;
   padding: 0.25rem 1rem;
@@ -130,7 +133,7 @@ form {
   height: 10rem;
 }
 
-#pokemon:focus {
+#searchInput:focus {
   outline: none;
 }
 
@@ -176,7 +179,8 @@ i:active {
   border: 0.25rem solid black;
   border-radius: 0.5rem;
 }
-.right-side__box > * {
+.description,
+.stats {
   margin: 1rem;
   background-color: white;
   border-radius: 0.5rem;
@@ -199,10 +203,7 @@ i:active {
 
 .stats {
   padding: 1rem;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+
   justify-self: flex-end;
   display: flex;
   flex-direction: column;
@@ -240,6 +241,26 @@ i:active {
   width: 0%;
   background: rgb(102, 201, 10);
   transition: width 1s ease-out;
+}
+
+.evolutions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem;
+  background-color: white;
+}
+
+.evolution__images {
+  display: flex;
+  width: 100%;
+}
+.evolution {
+  flex: 1;
+  border: 1px solid red;
+  height: 100%;
+  margin: 0.5rem;
+  text-align: center;
 }
 /* 
 

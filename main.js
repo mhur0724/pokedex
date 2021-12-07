@@ -9,23 +9,40 @@ let statValue = document.querySelectorAll(".stat-value");
 let leftArrow = document.getElementById("left-arrow");
 let rightArrow = document.getElementById("right-arrow");
 let descriptionP = document.getElementById("description__p");
-let id = Math.floor(Math.random() * 898) + 1;
+let initId = Math.floor(Math.random() * 898) + 1;
+let id;
+let evolution;
 
-window.addEventListener("DOMContentLoaded", searchRandomPokemon);
+window.addEventListener("DOMContentLoaded", initialPokemon);
 document.getElementById("searchBtn").addEventListener("click", searchPokemon);
 leftArrow.addEventListener("click", clickLeftArrow);
 rightArrow.addEventListener("click", clickRightArrow);
+window.addEventListener("keydown", changePokemon);
 
-function searchRandomPokemon() {
-  fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+function fetchFunction(pokemon) {
+  fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
     .then((response) => response.json())
     .then((data) => {
       setProfile(data);
       setTypes(data);
       setStats(data);
-      setDescription();
+      id = data.id;
+    })
+    .catch(() => {
+      if (typeof pokemon === "string" || pokemon instanceof String) {
+        alert(
+          "Could not find pokemon by that name. Please try the ID number instead"
+        );
+      }
     });
+  setDescription(pokemon);
+  getEvolutionChain(pokemon);
 }
+
+function initialPokemon() {
+  fetchFunction(initId);
+}
+
 function searchPokemon(e) {
   e.preventDefault();
   let pokemon = document.getElementById("searchInput").value.toLowerCase();
@@ -34,22 +51,38 @@ function searchPokemon(e) {
   } else {
     document.forms[0].reset();
 
-    fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setProfile(data);
-        setTypes(data);
-        setStats(data);
-        setDescription();
-        id = data.id;
-      })
-      .catch(() => {
-        if (typeof pokemon === "string" || pokemon instanceof String) {
-          alert(
-            "Could not find pokemon by that name. Please try the ID number instead"
-          );
-        }
-      });
+    fetchFunction(pokemon);
+  }
+}
+
+function clickLeftArrow() {
+  if (id > 1) {
+    id -= 1;
+    fetchFunction(id);
+  } else if (id === 1) {
+    id = 898;
+    fetchFunction(id);
+  }
+}
+
+function clickRightArrow() {
+  if (id < 898) {
+    id += 1;
+    fetchFunction(id);
+  } else if (id === 898) {
+    id = 1;
+    fetchFunction(id);
+  }
+}
+
+function changePokemon(e) {
+  switch (e.keyCode) {
+    case 37:
+      clickLeftArrow();
+      break;
+    case 39:
+      clickRightArrow();
+      break;
   }
 }
 
@@ -97,55 +130,11 @@ function setStats(data) {
   }
 }
 
-function clickLeftArrow() {
-  if (id > 1) {
-    id -= 1;
-    fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setProfile(data);
-        setTypes(data);
-        setStats(data);
-      });
-  } else if (id === 1) {
-    id = 898;
-    fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setProfile(data);
-        setTypes(data);
-        setStats(data);
-      });
-  }
-}
-
-function clickRightArrow() {
-  if (id < 898) {
-    id += 1;
-    fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setProfile(data);
-        setTypes(data);
-        setStats(data);
-      });
-  } else if (id === 898) {
-    id = 1;
-    fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setProfile(data);
-        setTypes(data);
-        setStats(data);
-      });
-  }
-}
-let descriptionLanguages = [];
-function setDescription() {
-  fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`)
+function setDescription(pokemon) {
+  let descriptionLanguages = [];
+  fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemon}`)
     .then((response) => response.json())
     .then((data) => {
-      descriptionLanguages = [];
       for (i in data["flavor_text_entries"]) {
         descriptionLanguages.push(data["flavor_text_entries"][i].language.name);
       }
@@ -156,13 +145,25 @@ function setDescription() {
     });
 }
 
-function newPokemon() {
-  fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+function getEvolutionChain(pokemon) {
+  fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemon}/`)
     .then((response) => response.json())
     .then((data) => {
-      setProfile(data);
-      setTypes(data);
-      setStats(data);
-      setDescription();
+      fetch(`${data["evolution_chain"].url}`)
+        .then((response) => response.json())
+        .then((data) => {
+          let base = data.chain.species.name;
+          let secondForm, thirdForm;
+          if (data.chain["evolves_to"][0] != undefined) {
+            secondForm = data.chain["evolves_to"][0].species.name;
+            if (data.chain["evolves_to"][0]["evolves_to"][0] != undefined) {
+              thirdForm =
+                data.chain["evolves_to"][0]["evolves_to"][0].species.name;
+            }
+          }
+          console.log(base, secondForm, thirdForm);
+        });
     });
 }
+
+function setEvolution(pokemon) {}
