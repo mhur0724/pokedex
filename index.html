@@ -6,58 +6,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="main.js" defer></script>
+    <script
+      src="https://kit.fontawesome.com/1dbd4f81be.js"
+      crossorigin="anonymous"
+    ></script>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="pokedex">
-      <form>
-        <div class="formBox">
-          <label for="pokemon">Pokemon</label>
-          <input type="text" id="pokemon" placeholder="Enter ID or Name" />
+      <div class="left-side">
+        <div class="left-side__box">
+          <form autocomplete="off">
+            <div class="formBox">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Enter ID or Name"
+              />
+            </div>
+            <div class="formBox">
+              <button id="searchBtn">Search</button>
+            </div>
+          </form>
+          <div class="identifier">
+            <div id="name"></div>
+            <div id="id"></div>
+          </div>
+          <div id="profile-pic__div">
+            <img id="profile-pic" src="" alt="" />
+          </div>
+          <div class="type">
+            <ul id="type__list"></ul>
+          </div>
         </div>
-        <div class="formBox">
-          <button id="btn">Click to Add</button>
-        </div>
-      </form>
-      <div class="profile">
-        <div id="name"></div>
-        <div id="id"></div>
-        <div id="profile-pic__div">
-          <img id="profile-pic" src="" alt="" />
+        <div class="arrows">
+          <div class="left-arrow">
+            <i id="left-arrow" class="fas fa-caret-left fa-6x"></i>
+          </div>
+          <div class="right-arrow">
+            <i id="right-arrow" class="fas fa-caret-right fa-6x"></i>
+          </div>
         </div>
       </div>
-
-      <div class="type">
-        <ul id="type__list"></ul>
+      <div class="hinge">
+        <div class="hinge-item"></div>
+        <div class="hinge-item"></div>
+        <div class="hinge-item"></div>
       </div>
+      <div class="right-side">
+        <div class="right-side__box">
+          <div class="description">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              Laboriosam omnis, et, deserunt aut, accusantium illum expedita
+              magnam repellendus ad atque minima? Nemo velit voluptates
+              accusamus accusantium suscipit veniam quod dolore quia!
+              Praesentium doloribus obcaecati quasi a, necessitatibus quas
+              repudiandae dicta tempore at error atque, ab expedita aliquid,
+              officia velit reprehenderit eius ducimus sint veritatis totam
+              nostrum ipsa architecto! Nobis nam explicabo optio, perferendis
+              esse quod at maiores praesentium aperiam cum!
+            </p>
+          </div>
+          <div class="stats">
+            <ul id="stats__list">
+              <li class="stats__list__item">
+                <p>HP</p>
+                <p class="stat-value">0</p>
 
-      <div class="stats">
-        <ul id="stats__list">
-          <li class="stats__list__item">
-            <p class="hidden">HP</p>
-            <p></p>
-          </li>
-          <li class="stats__list__item">
-            <p class="hidden">Attack</p>
-            <p></p>
-          </li>
-          <li class="stats__list__item">
-            <p class="hidden">Defense</p>
-            <p></p>
-          </li>
-          <li class="stats__list__item">
-            <p class="hidden">Special Attack</p>
-            <p></p>
-          </li>
-          <li class="stats__list__item">
-            <p class="hidden">Special Defense</p>
-            <p></p>
-          </li>
-          <li class="stats__list__item">
-            <p class="hidden">Speed</p>
-            <p></p>
-          </li>
-        </ul>
+                <div class="bar">
+                  <div class="bar-value"></div>
+                </div>
+              </li>
+              <li class="stats__list__item">
+                <p>Attack</p>
+                <p class="stat-value">0</p>
+                <div class="bar">
+                  <div class="bar-value"></div>
+                </div>
+              </li>
+              <li class="stats__list__item">
+                <p>Defense</p>
+                <p class="stat-value">0</p>
+                <div class="bar">
+                  <div class="bar-value"></div>
+                </div>
+              </li>
+              <li class="stats__list__item">
+                <p>Special Attack</p>
+                <p class="stat-value">0</p>
+                <div class="bar">
+                  <div class="bar-value"></div>
+                </div>
+              </li>
+              <li class="stats__list__item">
+                <p>Special Defense</p>
+                <p class="stat-value">0</p>
+                <div class="bar">
+                  <div class="bar-value"></div>
+                </div>
+              </li>
+              <li class="stats__list__item">
+                <p>Speed</p>
+                <p class="stat-value">0</p>
+                <div class="bar">
+                  <div class="bar-value"></div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   </body>

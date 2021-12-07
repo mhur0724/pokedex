@@ -3,13 +3,30 @@ let pokemonId = document.getElementById("id");
 let pokemonPic = document.getElementById("profile-pic");
 let pokemonTypes = document.querySelector("#type__list");
 let pokemonStats = document.querySelectorAll(".stats__list__item");
-let pokemonPicDiv = document.getElementById("profile-pic__div");
+let bar = document.querySelectorAll(".bar");
+let barValue = document.querySelectorAll(".bar-value");
+let statValue = document.querySelectorAll(".stat-value");
+let leftArrow = document.getElementById("left-arrow");
+let rightArrow = document.getElementById("right-arrow");
+let randomId = Math.floor(Math.random() * 898) + 1;
 
-document.getElementById("btn").addEventListener("click", searchPokemon);
+window.addEventListener("DOMContentLoaded", searchRandomPokemon);
+document.getElementById("searchBtn").addEventListener("click", searchPokemon);
+leftArrow.addEventListener("click", clickLeftArrow);
+rightArrow.addEventListener("click", clickRightArrow);
 
+function searchRandomPokemon() {
+  fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`)
+    .then((response) => response.json())
+    .then((data) => {
+      setProfile(data);
+      setTypes(data);
+      setStats(data);
+    });
+}
 function searchPokemon(e) {
   e.preventDefault();
-  let pokemon = document.getElementById("pokemon").value.toLowerCase();
+  let pokemon = document.getElementById("searchInput").value.toLowerCase();
   if (pokemon < 0 || pokemon > 898) {
     alert("Please enter an ID between 1 and 898");
   } else {
@@ -44,9 +61,9 @@ function setProfile(data) {
     types.push(type);
   }
   if (types.length > 1) {
-    pokemonPicDiv.style.background = `linear-gradient(var(--color-${types[0]}), var(--color-${types[1]}))`;
+    pokemonPic.style.background = `linear-gradient(var(--color-${types[0]}), var(--color-${types[1]}))`;
   } else {
-    pokemonPicDiv.style.background = `linear-gradient(var(--color-${types[0]}), var(--color-${types[0]}))`;
+    pokemonPic.style.background = `linear-gradient(var(--color-${types[0]}), var(--color-${types[0]}))`;
   }
 }
 
@@ -68,18 +85,34 @@ function setTypes(data) {
 }
 
 function setStats(data) {
-  pokemonStats.forEach((item) => {
-    if (item.lastElementChild.innerHTML != "") {
-      item.lastElementChild.innerHTML = "";
-    }
-    if (item.firstElementChild.classList.contains("hidden")) {
-      item.firstElementChild.classList.remove("hidden");
-    }
-  });
   for (i in data.stats) {
-    let statValue = document.createElement("p");
-    // console.log(data.stats[i][`base_stat`]);
-    statValue.textContent = data.stats[i]["base_stat"];
-    pokemonStats[i].appendChild(statValue);
+    let barValueConverted = (data.stats[i]["base_stat"] * 7.5) / 255;
+    barValue[i].style.width = `${barValueConverted}rem`;
+    statValue[i].textContent = data.stats[i]["base_stat"];
   }
+}
+
+function clickLeftArrow() {
+  fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+    .then((response) => response.json())
+    .then((data) => {
+      setProfile(data);
+      setTypes(data);
+      setStats(data);
+    });
+}
+
+function clickRightArrow() {
+  if (id === undefined) {
+    id = 1;
+  } else {
+    id += 1;
+  }
+  fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+    .then((response) => response.json())
+    .then((data) => {
+      setProfile(data);
+      setTypes(data);
+      setStats(data);
+    });
 }
