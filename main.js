@@ -8,7 +8,7 @@ let barValue = document.querySelectorAll(".bar-value");
 let statValue = document.querySelectorAll(".stat-value");
 let leftArrow = document.getElementById("left-arrow");
 let rightArrow = document.getElementById("right-arrow");
-let randomId = Math.floor(Math.random() * 898) + 1;
+let id = Math.floor(Math.random() * 898) + 1;
 
 window.addEventListener("DOMContentLoaded", searchRandomPokemon);
 document.getElementById("searchBtn").addEventListener("click", searchPokemon);
@@ -16,7 +16,7 @@ leftArrow.addEventListener("click", clickLeftArrow);
 rightArrow.addEventListener("click", clickRightArrow);
 
 function searchRandomPokemon() {
-  fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`)
+  fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
     .then((response) => response.json())
     .then((data) => {
       setProfile(data);
@@ -37,6 +37,7 @@ function searchPokemon(e) {
         setProfile(data);
         setTypes(data);
         setStats(data);
+        id = data.id;
       })
       .catch(() => {
         if (typeof pokemon === "string" || pokemon instanceof String) {
@@ -93,26 +94,45 @@ function setStats(data) {
 }
 
 function clickLeftArrow() {
-  fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
-    .then((response) => response.json())
-    .then((data) => {
-      setProfile(data);
-      setTypes(data);
-      setStats(data);
-    });
+  if (id > 1) {
+    id -= 1;
+    fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setProfile(data);
+        setTypes(data);
+        setStats(data);
+      });
+  } else if (id === 1) {
+    id = 898;
+    fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setProfile(data);
+        setTypes(data);
+        setStats(data);
+      });
+  }
 }
 
 function clickRightArrow() {
-  if (id === undefined) {
-    id = 1;
-  } else {
+  if (id < 898) {
     id += 1;
+    fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setProfile(data);
+        setTypes(data);
+        setStats(data);
+      });
+  } else if (id === 898) {
+    id = 1;
+    fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setProfile(data);
+        setTypes(data);
+        setStats(data);
+      });
   }
-  fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
-    .then((response) => response.json())
-    .then((data) => {
-      setProfile(data);
-      setTypes(data);
-      setStats(data);
-    });
 }

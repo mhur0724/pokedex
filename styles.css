@@ -38,6 +38,7 @@ body {
 
 .pokedex {
   display: flex;
+  min-width: 50rem;
   width: 50rem;
   height: 30rem;
   align-items: center;
