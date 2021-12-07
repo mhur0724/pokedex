@@ -206,7 +206,6 @@ i:active {
   justify-self: flex-end;
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
 }
 
 #stats__list {

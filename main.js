@@ -8,6 +8,7 @@ let barValue = document.querySelectorAll(".bar-value");
 let statValue = document.querySelectorAll(".stat-value");
 let leftArrow = document.getElementById("left-arrow");
 let rightArrow = document.getElementById("right-arrow");
+let descriptionP = document.getElementById("description__p");
 let id = Math.floor(Math.random() * 898) + 1;
 
 window.addEventListener("DOMContentLoaded", searchRandomPokemon);
@@ -22,6 +23,7 @@ function searchRandomPokemon() {
       setProfile(data);
       setTypes(data);
       setStats(data);
+      setDescription();
     });
 }
 function searchPokemon(e) {
@@ -31,12 +33,14 @@ function searchPokemon(e) {
     alert("Please enter an ID between 1 and 898");
   } else {
     document.forms[0].reset();
+
     fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
       .then((response) => response.json())
       .then((data) => {
         setProfile(data);
         setTypes(data);
         setStats(data);
+        setDescription();
         id = data.id;
       })
       .catch(() => {
@@ -135,4 +139,30 @@ function clickRightArrow() {
         setStats(data);
       });
   }
+}
+let descriptionLanguages = [];
+function setDescription() {
+  fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`)
+    .then((response) => response.json())
+    .then((data) => {
+      descriptionLanguages = [];
+      for (i in data["flavor_text_entries"]) {
+        descriptionLanguages.push(data["flavor_text_entries"][i].language.name);
+      }
+      descriptionP.textContent =
+        data["flavor_text_entries"][descriptionLanguages.indexOf("en")][
+          "flavor_text"
+        ];
+    });
+}
+
+function newPokemon() {
+  fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+    .then((response) => response.json())
+    .then((data) => {
+      setProfile(data);
+      setTypes(data);
+      setStats(data);
+      setDescription();
+    });
 }
