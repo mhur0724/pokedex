@@ -12,10 +12,13 @@ let descriptionP = document.getElementById("description__p");
 
 let id;
 let evolutionForms;
-let evolutionBoxes = document.querySelector(".evolution__boxes");
-let baseImg = document.getElementById("baseImg");
-let secondImg = document.getElementById("secondImg");
-let thirdImg = document.getElementById("thirdImg");
+let evolutionImgs;
+
+let evolutionBoxes = document.getElementById("evolution__boxes");
+
+// let baseImg = document.getElementById("baseImg");
+// let secondImg = document.getElementById("secondImg");
+// let thirdImg = document.getElementById("thirdImg");
 
 window.addEventListener("DOMContentLoaded", initialPokemon);
 document.getElementById("searchBtn").addEventListener("click", searchPokemon);
@@ -151,57 +154,58 @@ function setDescription(pokemon) {
 }
 
 function getEvolutionChain(pokemon) {
+  evolutionImgs = [];
+  evolutionForms = [];
   fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemon}/`)
     .then((response) => response.json())
     .then((data) => {
       let evolutionChainUrl = data["evolution_chain"]["url"];
+      console.log(evolutionChainUrl);
       pushEvolutionForms(evolutionChainUrl);
     });
 }
 
 function pushEvolutionForms(url) {
-  evolutionForms = [];
-  let baseName, secondName, thirdName;
+  // let baseName, secondName, thirdName;
   let baseId, secondId, thirdId;
+  let baseImg, secondImg, thirdImg;
+
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
-      baseName = data.chain.species.name;
+      // baseName = data.chain.species.name;
       baseId = data.chain.species.url.split("/");
-      baseId = baseId[baseId.length - 2];
-      baseObj = new Evolution(baseName, baseId);
 
-      evolutionForms.push(baseObj);
-      if (data.chain["evolves_to"][0] != undefined) {
-        secondName = data.chain["evolves_to"][0].species.name;
-        secondId = data.chain["evolves_to"][0].species.url.split("/");
-        secondId = secondId[secondId.length - 2];
-        secondObj = new Evolution(secondName, secondId);
-        evolutionForms.push(secondObj);
-        if (data.chain["evolves_to"][0]["evolves_to"][0] != undefined) {
-          thirdName = data.chain["evolves_to"][0]["evolves_to"][0].species.name;
-          thirdId =
-            data.chain["evolves_to"][0]["evolves_to"][0].species.url.split("/");
-          thirdId = thirdId[thirdId.length - 2];
-          thirdObj = new Evolution(thirdName, thirdId);
-          evolutionForms.push(thirdObj);
-        }
-      }
+      baseId = baseId[baseId.length - 2];
+      baseImg = setEvolutionImg(baseId);
+      // if (data.chain["evolves_to"][0]["evolves_to"][0] != undefined) {
+      //   // thirdName = data.chain["evolves_to"][0]["evolves_to"][0].species.name;
+      //   thirdId =
+      //     data.chain["evolves_to"][0]["evolves_to"][0].species.url.split("/");
+      //   thirdId = thirdId[thirdId.length - 2];
+      //   setEvolutionImg(thirdId, thirdImg);
+      //   secondId = data.chain["evolves_to"][0].species.url.split("/");
+      //   secondId = secondId[secondId.length - 2];
+      //   setEvolutionImg(secondId, secondImg);
+      // } else if (data.chain["evolves_to"][0] != undefined) {
+      //   // secondName = data.chain["evolves_to"][0].species.name;
+      //   secondId = data.chain["evolves_to"][0].species.url.split("/");
+      //   secondId = secondId[secondId.length - 2];
+      //   setEvolutionImg(secondId, secondImg);
+      // }
     });
 }
 
-class Evolution {
-  constructor(name, pokemon) {
-    this.name = name;
-    fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
-      .then((response) => response.json())
-      .then((data) => {
-        this.img = data.sprites.other["official-artwork"]["front_default"];
-      });
-  }
-}
-
-function setEvolutionBoxes(pokemonForm, evolutionImg) {
-  evolutionImg.src = pokemonForm.img;
+function setEvolutionImg(pokemon) {
+  evolutionBoxes.innerHTML = "";
+  fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
+    .then((response) => response.json())
+    .then((data) => {
+      evolutionForm = `${data.sprites.other["official-artwork"]["front_default"]}`;
+      evolutionImgs.push(evolutionForm);
+      let pokemonImg = document.createElement("img");
+      pokemonImg.src = evolutionForm;
+      evolutionBoxes.appendChild(pokemonImg);
+    });
 }

@@ -263,3 +263,11 @@ i:active {
   margin: 0.5rem;
   text-align: center;
 }
+
+.evolution img {
+  height: 4rem;
+}
+
+.hidden {
+  display: none;
+}
