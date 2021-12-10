@@ -228,6 +228,7 @@ i:active {
 }
 .stat-value {
   width: 2rem;
+  text-align: center;
 }
 
 .bar {
@@ -251,7 +252,7 @@ i:active {
   background-color: white;
 }
 
-.evolution__images {
+.evolution__boxes {
   display: flex;
   width: 100%;
 }
@@ -262,12 +263,3 @@ i:active {
   margin: 0.5rem;
   text-align: center;
 }
-/* 
-
-
-
-.stats__list__item p:first-child {
-  width: 7rem;
-}
-
- */
