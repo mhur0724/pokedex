@@ -11,7 +11,9 @@ let rightArrow = document.getElementById("right-arrow");
 let descriptionP = document.getElementById("description__p");
 
 let id;
-let evolutionForms;
+
+let evolutionImgs = [];
+
 let evolutionBoxes = document.querySelector(".evolution__boxes");
 let baseImg = document.getElementById("baseImg");
 let secondImg = document.getElementById("secondImg");
@@ -155,53 +157,62 @@ function getEvolutionChain(pokemon) {
     .then((response) => response.json())
     .then((data) => {
       let evolutionChainUrl = data["evolution_chain"]["url"];
-      pushEvolutionForms(evolutionChainUrl);
+      getEvolutionIds(evolutionChainUrl);
     });
 }
-
-function pushEvolutionForms(url) {
-  evolutionForms = [];
-  let baseName, secondName, thirdName;
+let evolutionIds;
+function getEvolutionIds(url) {
+  evolutionIds = [];
+  evolutionBoxes.innerHTML = "";
   let baseId, secondId, thirdId;
+
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
-      baseName = data.chain.species.name;
       baseId = data.chain.species.url.split("/");
       baseId = baseId[baseId.length - 2];
-      baseObj = new Evolution(baseName, baseId);
+      evolutionIds.push(baseId);
 
-      evolutionForms.push(baseObj);
       if (data.chain["evolves_to"][0] != undefined) {
-        secondName = data.chain["evolves_to"][0].species.name;
         secondId = data.chain["evolves_to"][0].species.url.split("/");
         secondId = secondId[secondId.length - 2];
-        secondObj = new Evolution(secondName, secondId);
-        evolutionForms.push(secondObj);
+        evolutionIds.push(secondId);
+
         if (data.chain["evolves_to"][0]["evolves_to"][0] != undefined) {
-          thirdName = data.chain["evolves_to"][0]["evolves_to"][0].species.name;
           thirdId =
             data.chain["evolves_to"][0]["evolves_to"][0].species.url.split("/");
           thirdId = thirdId[thirdId.length - 2];
-          thirdObj = new Evolution(thirdName, thirdId);
-          evolutionForms.push(thirdObj);
+          evolutionIds.push(thirdId);
         }
+      }
+      for (i in evolutionIds) {
+        console.log(i);
+        console.log(evolutionIds[i]);
+        setEvolutionPhotos(evolutionIds[i], i);
       }
     });
 }
 
-class Evolution {
-  constructor(name, pokemon) {
-    this.name = name;
-    fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
-      .then((response) => response.json())
-      .then((data) => {
-        this.img = data.sprites.other["official-artwork"]["front_default"];
-      });
-  }
-}
+function setEvolutionPhotos(pokemon, i) {
+  fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
+    .then((response) => response.json())
+    .then((data) => {
+      let evoBaseDiv = document.createElement("div");
+      let evoImgEl = document.createElement("img");
+      let evoP = document.createElement("p");
 
-function setEvolutionBoxes(pokemonForm, evolutionImg) {
-  evolutionImg.src = pokemonForm.img;
+      evoBaseDiv.append(evoImgEl, evoP);
+      evoBaseDiv.classList.add("evolution");
+      evoImgEl.src = data.sprites.other["official-artwork"]["front_default"];
+
+      if (i == 0) {
+        evoP.textContent = "Base";
+      } else if (i == 1) {
+        evoP.textContent = "Second";
+      } else if (i == 2) {
+        evoP.textContent = "Third";
+      }
+
+      evolutionBoxes.appendChild(evoBaseDiv);
+    });
 }

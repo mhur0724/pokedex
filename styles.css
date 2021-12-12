@@ -41,7 +41,7 @@ body {
   display: flex;
   min-width: 50rem;
   width: 50rem;
-  height: 30rem;
+  height: 34rem;
   align-items: center;
   justify-content: center;
   background: red;
@@ -172,6 +172,8 @@ i:active {
 /* Right Side */
 
 .right-side__box {
+  display: flex;
+  flex-direction: column;
   position: relative;
   height: 100%;
   width: 100%;
@@ -188,7 +190,7 @@ i:active {
 
 .description {
   padding: 0.3rem;
-  max-height: 40%;
+  height: 4rem;
   overflow-y: auto;
 }
 
@@ -245,11 +247,20 @@ i:active {
 }
 
 .evolutions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 8rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 1rem;
   background-color: white;
+  border-radius: 0.25rem;
+}
+.evolutions p {
+  margin-top: 0.5rem;
 }
 
 .evolution__boxes {
@@ -258,8 +269,10 @@ i:active {
 }
 .evolution {
   flex: 1;
-  border: 1px solid red;
-  height: 100%;
-  margin: 0.5rem;
+
   text-align: center;
+}
+
+.evolution img {
+  max-height: 4rem;
 }
