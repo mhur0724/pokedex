@@ -121,6 +121,9 @@ form {
   border-radius: 0.25rem;
   padding: 0.25rem 1rem;
 }
+.identifier #name {
+  margin-right: 1rem;
+}
 
 #profile-pic__div {
   display: flex;

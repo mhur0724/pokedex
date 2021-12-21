@@ -1,23 +1,27 @@
-let pokemonName = document.getElementById("name");
-let pokemonId = document.getElementById("id");
-let pokemonPic = document.getElementById("profile-pic");
-let pokemonTypes = document.querySelector("#type__list");
-let pokemonStats = document.querySelectorAll(".stats__list__item");
-let bar = document.querySelectorAll(".bar");
-let barValue = document.querySelectorAll(".bar-value");
-let statValue = document.querySelectorAll(".stat-value");
-let leftArrow = document.getElementById("left-arrow");
-let rightArrow = document.getElementById("right-arrow");
-let descriptionP = document.getElementById("description__p");
+const pokemonName = document.getElementById("name");
+const pokemonId = document.getElementById("id");
+const pokemonPic = document.getElementById("profile-pic");
+const pokemonTypes = document.querySelector("#type__list");
+const pokemonStats = document.querySelectorAll(".stats__list__item");
+const bar = document.querySelectorAll(".bar");
+const barValue = document.querySelectorAll(".bar-value");
+const statValue = document.querySelectorAll(".stat-value");
+const leftArrow = document.getElementById("left-arrow");
+const rightArrow = document.getElementById("right-arrow");
+const descriptionP = document.getElementById("description__p");
 
 let id;
+let evolutionIds;
 
-let evolutionImgs = [];
-
-let evolutionBoxes = document.querySelector(".evolution__boxes");
-let baseImg = document.getElementById("baseImg");
-let secondImg = document.getElementById("secondImg");
-let thirdImg = document.getElementById("thirdImg");
+const evolutionBoxBase = document.getElementById("evolution__box__base");
+const evolutionBoxSecond = document.getElementById("evolution__box__second");
+const evolutionBoxThird = document.getElementById("evolution__box__third");
+const baseImg = document.getElementById("base_img");
+const secondImg = document.getElementById("second_img");
+const thirdImg = document.getElementById("third_img");
+const baseP = document.getElementById("base__p");
+const secondP = document.getElementById("second__p");
+const thirdP = document.getElementById("third__p");
 
 window.addEventListener("DOMContentLoaded", initialPokemon);
 document.getElementById("searchBtn").addEventListener("click", searchPokemon);
@@ -160,10 +164,9 @@ function getEvolutionChain(pokemon) {
       getEvolutionIds(evolutionChainUrl);
     });
 }
-let evolutionIds;
+
 function getEvolutionIds(url) {
   evolutionIds = [];
-  evolutionBoxes.innerHTML = "";
   let baseId, secondId, thirdId;
 
   fetch(url)
@@ -186,33 +189,37 @@ function getEvolutionIds(url) {
         }
       }
       for (i in evolutionIds) {
-        console.log(i);
-        console.log(evolutionIds[i]);
         setEvolutionPhotos(evolutionIds[i], i);
       }
     });
 }
 
 function setEvolutionPhotos(pokemon, i) {
+  baseImg.src = "";
+  secondImg.src = "";
+  thirdImg.src = "";
+  evolutionBoxBase.classList.remove("evolution");
+  evolutionBoxSecond.classList.remove("evolution");
+  evolutionBoxThird.classList.remove("evolution");
+  baseP.textContent = "";
+  secondP.textContent = "";
+  thirdP.textContent = "";
+
   fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
     .then((response) => response.json())
     .then((data) => {
-      let evoBaseDiv = document.createElement("div");
-      let evoImgEl = document.createElement("img");
-      let evoP = document.createElement("p");
-
-      evoBaseDiv.append(evoImgEl, evoP);
-      evoBaseDiv.classList.add("evolution");
-      evoImgEl.src = data.sprites.other["official-artwork"]["front_default"];
-
       if (i == 0) {
-        evoP.textContent = "Base";
+        baseImg.src = data.sprites.other["official-artwork"]["front_default"];
+        evolutionBoxBase.classList.add("evolution");
+        baseP.textContent = "Base";
       } else if (i == 1) {
-        evoP.textContent = "Second";
+        secondImg.src = data.sprites.other["official-artwork"]["front_default"];
+        evolutionBoxSecond.classList.add("evolution");
+        secondP.textContent = "Second";
       } else if (i == 2) {
-        evoP.textContent = "Third";
+        thirdImg.src = data.sprites.other["official-artwork"]["front_default"];
+        evolutionBoxThird.classList.add("evolution");
+        thirdP.textContent = "Third";
       }
-
-      evolutionBoxes.appendChild(evoBaseDiv);
     });
 }
