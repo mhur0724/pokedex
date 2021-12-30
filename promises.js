@@ -21,7 +21,7 @@ const getPokemonData = async (pokemon) => {
     );
     let data = response.data;
     id = data.id;
-    setName(data);
+    setNameAndId(data);
     setPhoto(data);
     getElementTypes(data);
     setStats(data);
@@ -40,8 +40,9 @@ const capitalizeFirstLetterOfText = (text) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
-const setName = (data) => {
+const setNameAndId = (data) => {
   $("#name").text(capitalizeFirstLetterOfText(data.name));
+  $("#id").text(`#${data.id}`);
 };
 
 const setPhoto = (data) => {
