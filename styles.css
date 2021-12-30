@@ -279,3 +279,7 @@ i:active {
 .evolution img {
   max-height: 4rem;
 }
+
+.evolution img:hover {
+  cursor: url("images/pokeball.png"), pointer;
+}

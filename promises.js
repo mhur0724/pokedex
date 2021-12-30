@@ -178,6 +178,9 @@ const setEvolutionPhotos = async (pokemon, i) => {
       "src",
       response.data.sprites.other["official-artwork"]["front_default"]
     );
+
+    $(`#${i}__img`).attr("data-id", pokemon);
+
     if (i == 0) {
       $(`#${i}__p`).text("Base");
     } else if (i == 1) {
@@ -235,3 +238,9 @@ function changePokemon(e) {
 }
 
 setRandomInitialPokemon();
+
+$(".evolution__box").click((e) => {
+  if (e.target.dataset.id != id) {
+    getPokemonData(e.target.dataset.id);
+  }
+});
