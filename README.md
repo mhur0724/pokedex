@@ -5,12 +5,12 @@ The pokedex will provide information (description, stats, and evolution forms) o
 From this project I was better able to understand how to use Fetch API, axios, and jQuery. Additionally, I learned how to use a debugger as I was just using console.log to try and debug my code, but that quickly became very confusing.
 
 Features: 
-*Calls to Fetch API.
-*Dynamically changing stats bars.
-*Ability to call a pokemon by name or Id.
-*Displays 
-*jQuery
-*Axios
-*Try / Catch
-*Async / Await
-*Loading animation
+- Calls to Fetch API.
+- Dynamically changing stats bars.
+- Ability to call a pokemon by name or Id.
+- Displays 
+- jQuery
+- Axios
+- Try / Catch
+- Async / Await
+- Loading animation
