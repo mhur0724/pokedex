@@ -1,58 +1,200 @@
-const pokemonName = document.getElementById("name");
-const pokemonId = document.getElementById("id");
-const pokemonPic = document.getElementById("profile-pic");
-const pokemonTypes = document.querySelector("#type__list");
-const pokemonStats = document.querySelectorAll(".stats__list__item");
 const bar = document.querySelectorAll(".bar");
 const barValue = document.querySelectorAll(".bar-value");
 const statValue = document.querySelectorAll(".stat-value");
-const leftArrow = document.getElementById("left-arrow");
-const rightArrow = document.getElementById("right-arrow");
-const descriptionP = document.getElementById("description__p");
 
 let id;
-let evolutionIds;
 
-const evolutionBoxBase = document.getElementById("evolution__box__base");
-const evolutionBoxSecond = document.getElementById("evolution__box__second");
-const evolutionBoxThird = document.getElementById("evolution__box__third");
-const baseImg = document.getElementById("base_img");
-const secondImg = document.getElementById("second_img");
-const thirdImg = document.getElementById("third_img");
-const baseP = document.getElementById("base__p");
-const secondP = document.getElementById("second__p");
-const thirdP = document.getElementById("third__p");
+$("#searchBtn").click(searchPokemon);
+$("#left-arrow").click(clickLeftArrow);
+$("#right-arrow").click(clickRightArrow);
+$(window).keydown(changePokemon);
 
-window.addEventListener("DOMContentLoaded", initialPokemon);
-document.getElementById("searchBtn").addEventListener("click", searchPokemon);
-leftArrow.addEventListener("click", clickLeftArrow);
-rightArrow.addEventListener("click", clickRightArrow);
-window.addEventListener("keydown", changePokemon);
+const setRandomInitialPokemon = () => {
+  let randomId = Math.floor(Math.random() * 898) + 1;
+  getPokemonData(randomId);
+};
 
-function initialPokemon() {
-  let initId = Math.floor(Math.random() * 898) + 1;
-  fetchFunction(initId);
-}
+const getPokemonData = async (pokemon) => {
+  try {
+    let response = await axios.get(
+      `https://pokeapi.co/api/v2/pokemon/${pokemon}`
+    );
+    let data = response.data;
+    id = data.id;
+    setNameAndId(data);
+    setPhoto(data);
+    getElementTypes(data);
+    setStats(data);
+    setDescription(id);
+    getEvolutionChain(id);
+  } catch (e) {
+    if (typeof pokemon === "string" || pokemon instanceof String) {
+      alert(
+        "Could not find pokemon by that name. Please try the ID number instead"
+      );
+    }
+  }
+};
 
-function fetchFunction(pokemon) {
-  fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
-    .then((response) => response.json())
-    .then((data) => {
-      id = data.id;
-      setProfile(data);
-      setTypes(data);
-      setStats(data);
-      setDescription(id);
-      getEvolutionChain(id);
-    })
-    .catch(() => {
-      if (typeof pokemon === "string" || pokemon instanceof String) {
-        alert(
-          "Could not find pokemon by that name. Please try the ID number instead"
+const capitalizeFirstLetterOfText = (text) => {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+
+const setNameAndId = (data) => {
+  $("#name").text(capitalizeFirstLetterOfText(data.name));
+  $("#id").text(`#${data.id}`);
+};
+
+const setPhoto = (data) => {
+  $("#profile-pic").attr(
+    "src",
+    data.sprites.other["official-artwork"]["front_default"]
+  );
+};
+
+const getElementTypes = (data) => {
+  let types = [];
+  for (i in data.types) {
+    let type = data.types[i].type.name;
+    types.push(type);
+  }
+  setPhotoBackgroundGradient(types);
+  setTypes(types);
+};
+
+const setPhotoBackgroundGradient = (types) => {
+  // Pokemon have a type of at least 1 and at max 2
+
+  $("#profile-pic").css(
+    "background",
+    `linear-gradient(var(--color-${types[0]}), var(--color-${
+      types[types.length - 1]
+    }))`
+  );
+};
+
+const setTypes = (types) => {
+  $("#type__list").empty();
+  for (type of types) {
+    $("#type__list").append(
+      `<li style="background-color: var(--color-${type})">${capitalizeFirstLetterOfText(
+        type
+      )}</li>`
+    );
+  }
+};
+
+const setStats = (data) => {
+  for (i in data.stats) {
+    let barValueConverted = (data.stats[i]["base_stat"] * 7.5) / 255;
+    barValue[i].style.width = `${barValueConverted}rem`;
+    statValue[i].textContent = data.stats[i]["base_stat"];
+  }
+};
+
+const setDescription = async (pokemon) => {
+  try {
+    let response = await axios.get(
+      `https://pokeapi.co/api/v2/pokemon-species/${pokemon}`
+    );
+    for (i in response.data["flavor_text_entries"]) {
+      if (response.data["flavor_text_entries"][i].language.name === "en") {
+        $("#description__p").text(
+          response.data["flavor_text_entries"][i]["flavor_text"]
         );
+        break;
       }
-    });
-}
+    }
+  } catch (e) {
+    console.log("Something went wrong", e);
+  }
+};
+
+const getEvolutionChain = async (pokemon) => {
+  try {
+    let response = await axios.get(
+      `https://pokeapi.co/api/v2/pokemon-species/${pokemon}/`
+    );
+
+    let evolutionChainUrl = response.data["evolution_chain"].url;
+    getEvolutionIds(evolutionChainUrl);
+  } catch (e) {
+    console.log("Something went wrong", e);
+  }
+};
+
+const getEvolutionIds = async (url) => {
+  try {
+    evolutionIds = [];
+    let baseId, secondId, thirdId;
+    let response = await axios.get(url);
+    baseId = response.data.chain.species.url.split("/");
+    baseId = baseId[baseId.length - 2];
+    evolutionIds.push(baseId);
+
+    // checks if there is a second form and if so it grabs the Id of the second form
+    if (response.data.chain["evolves_to"][0] != undefined) {
+      secondId = response.data.chain["evolves_to"][0].species.url.split("/");
+      secondId = secondId[secondId.length - 2];
+      evolutionIds.push(secondId);
+
+      // checks if there is a third form and if so it grabs the Id of the third form
+      if (response.data.chain["evolves_to"][0]["evolves_to"][0] != undefined) {
+        thirdId =
+          response.data.chain["evolves_to"][0][
+            "evolves_to"
+          ][0].species.url.split("/");
+        thirdId = thirdId[thirdId.length - 2];
+        evolutionIds.push(thirdId);
+      }
+    }
+
+    for (i in evolutionIds) {
+      clearEvolutionPhotos();
+      setEvolutionPhotos(evolutionIds[i], i);
+    }
+  } catch (e) {
+    console.log("Something went wrong", e);
+  }
+};
+
+const clearEvolutionPhotos = () => {
+  for (let i = 0; i < 3; i++) {
+    $(`#${i}__img`).attr("src", "");
+    $(`#${i}__p`).text("");
+
+    if ($(`#evolution__box__${i}`).hasClass("evolution")) {
+      $(`#evolution__box__${i}`).removeClass("evolution");
+    }
+  }
+};
+
+const setEvolutionPhotos = async (pokemon, i) => {
+  try {
+    let response = await axios.get(
+      `https://pokeapi.co/api/v2/pokemon/${pokemon}`
+    );
+    $(".loader__div").css("display", "none");
+    $(".evolution__boxes").css("display", "flex");
+    $(`#${i}__img`).attr(
+      "src",
+      response.data.sprites.other["official-artwork"]["front_default"]
+    );
+
+    $(`#${i}__img`).attr("data-id", pokemon);
+
+    if (i == 0) {
+      $(`#${i}__p`).text("Base");
+    } else if (i == 1) {
+      $(`#${i}__p`).text("Second");
+    } else {
+      $(`#${i}__p`).text("Third");
+    }
+    $(`#evolution__box__${i}`).addClass("evolution");
+  } catch (e) {
+    console.log("Something went wrong", e);
+  }
+};
 
 function searchPokemon(e) {
   e.preventDefault();
@@ -62,27 +204,27 @@ function searchPokemon(e) {
   } else {
     document.forms[0].reset();
 
-    fetchFunction(pokemon);
+    getPokemonData(pokemon);
   }
 }
 
 function clickLeftArrow() {
   if (id > 1) {
     id -= 1;
-    fetchFunction(id);
+    getPokemonData(id);
   } else if (id === 1) {
     id = 898;
-    fetchFunction(id);
+    getPokemonData(id);
   }
 }
 
 function clickRightArrow() {
   if (id < 898) {
     id += 1;
-    fetchFunction(id);
+    getPokemonData(id);
   } else if (id === 898) {
     id = 1;
-    fetchFunction(id);
+    getPokemonData(id);
   }
 }
 
@@ -97,129 +239,10 @@ function changePokemon(e) {
   }
 }
 
-function setProfile(data) {
-  pokemonName.textContent =
-    data.name.charAt(0).toUpperCase() + data.name.slice(1);
+setRandomInitialPokemon();
 
-  pokemonId.textContent = `#${data.id}`;
-
-  pokemonPic.src = data.sprites.other["official-artwork"]["front_default"];
-  let types = [];
-  for (i in data.types) {
-    let type = data.types[i].type.name;
-    types.push(type);
+$(".evolution__box").click((e) => {
+  if (e.target.dataset.id != id) {
+    getPokemonData(e.target.dataset.id);
   }
-  if (types.length > 1) {
-    pokemonPic.style.background = `linear-gradient(var(--color-${types[0]}), var(--color-${types[1]}))`;
-  } else {
-    pokemonPic.style.background = `linear-gradient(var(--color-${types[0]}), var(--color-${types[0]}))`;
-  }
-}
-
-function setTypes(data) {
-  pokemonTypes.innerHTML = "";
-  for (i in data.types) {
-    let typeLi = document.createElement("li");
-    let typeValue =
-      data.types[i].type.name.charAt(0).toUpperCase() +
-      data.types[i].type.name.slice(1);
-    typeLi.innerHTML = typeValue;
-
-    typeLi.classList.add(`${data.types[i].type.name}`);
-    pokemonTypes.appendChild(typeLi);
-    pokemonTypes.children[
-      i
-    ].style.backgroundColor = `var(--color-${typeValue.toLowerCase()})`;
-  }
-}
-
-function setStats(data) {
-  for (i in data.stats) {
-    let barValueConverted = (data.stats[i]["base_stat"] * 7.5) / 255;
-    barValue[i].style.width = `${barValueConverted}rem`;
-    statValue[i].textContent = data.stats[i]["base_stat"];
-  }
-}
-
-function setDescription(pokemon) {
-  let descriptionLanguages = [];
-  fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemon}`)
-    .then((response) => response.json())
-    .then((data) => {
-      for (i in data["flavor_text_entries"]) {
-        descriptionLanguages.push(data["flavor_text_entries"][i].language.name);
-      }
-      descriptionP.textContent =
-        data["flavor_text_entries"][descriptionLanguages.indexOf("en")][
-          "flavor_text"
-        ];
-    });
-}
-
-function getEvolutionChain(pokemon) {
-  fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemon}/`)
-    .then((response) => response.json())
-    .then((data) => {
-      let evolutionChainUrl = data["evolution_chain"]["url"];
-      getEvolutionIds(evolutionChainUrl);
-    });
-}
-
-function getEvolutionIds(url) {
-  evolutionIds = [];
-  let baseId, secondId, thirdId;
-
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-      baseId = data.chain.species.url.split("/");
-      baseId = baseId[baseId.length - 2];
-      evolutionIds.push(baseId);
-
-      if (data.chain["evolves_to"][0] != undefined) {
-        secondId = data.chain["evolves_to"][0].species.url.split("/");
-        secondId = secondId[secondId.length - 2];
-        evolutionIds.push(secondId);
-
-        if (data.chain["evolves_to"][0]["evolves_to"][0] != undefined) {
-          thirdId =
-            data.chain["evolves_to"][0]["evolves_to"][0].species.url.split("/");
-          thirdId = thirdId[thirdId.length - 2];
-          evolutionIds.push(thirdId);
-        }
-      }
-      for (i in evolutionIds) {
-        setEvolutionPhotos(evolutionIds[i], i);
-      }
-    });
-}
-
-function setEvolutionPhotos(pokemon, i) {
-  baseImg.src = "";
-  secondImg.src = "";
-  thirdImg.src = "";
-  evolutionBoxBase.classList.remove("evolution");
-  evolutionBoxSecond.classList.remove("evolution");
-  evolutionBoxThird.classList.remove("evolution");
-  baseP.textContent = "";
-  secondP.textContent = "";
-  thirdP.textContent = "";
-
-  fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
-    .then((response) => response.json())
-    .then((data) => {
-      if (i == 0) {
-        baseImg.src = data.sprites.other["official-artwork"]["front_default"];
-        evolutionBoxBase.classList.add("evolution");
-        baseP.textContent = "Base";
-      } else if (i == 1) {
-        secondImg.src = data.sprites.other["official-artwork"]["front_default"];
-        evolutionBoxSecond.classList.add("evolution");
-        secondP.textContent = "Second";
-      } else if (i == 2) {
-        thirdImg.src = data.sprites.other["official-artwork"]["front_default"];
-        evolutionBoxThird.classList.add("evolution");
-        thirdP.textContent = "Third";
-      }
-    });
-}
+});

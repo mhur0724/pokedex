@@ -11,7 +11,7 @@
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="promises.js" defer></script>
+    <script src="main.js" defer></script>
 
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -36,6 +36,9 @@
             <div id="id"></div>
           </div>
           <div id="profile-pic__div">
+            <div class="loader__div">
+              <div class="loader"></div>
+            </div>
             <img id="profile-pic" src="" alt="" />
           </div>
           <div class="type">
@@ -110,8 +113,10 @@
           </div>
           <div class="evolutions">
             <p>Evolution</p>
-
-            <div class="evolution__boxes">
+            <div class="loader__div">
+              <div class="loader"></div>
+            </div>
+            <div class="evolution__boxes" style="display: none">
               <div id="evolution__box__0" class="evolution__box">
                 <img id="0__img" data-id="" src="" alt="" />
                 <p id="0__p"></p>
