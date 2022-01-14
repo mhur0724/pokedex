@@ -46,7 +46,6 @@ const setNameAndId = (data) => {
 };
 
 const setPhoto = (data) => {
-  $("#profile-pic__loader__div").css("display", "none");
   $("#profile-pic").attr(
     "src",
     data.sprites.other["official-artwork"]["front_default"]
@@ -175,7 +174,7 @@ const setEvolutionPhotos = async (pokemon, i) => {
     let response = await axios.get(
       `https://pokeapi.co/api/v2/pokemon/${pokemon}`
     );
-    $("#evolutions__loader__div").css("display", "none");
+    $(".loader__div").css("display", "none");
     $(".evolution__boxes").css("display", "flex");
     $(`#${i}__img`).attr(
       "src",
