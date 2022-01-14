@@ -92,7 +92,7 @@ From this project I was better able to understand how to use Fetch API, axios, a
 <!-- USAGE EXAMPLES -->
 ## How to Use
 
-For the most part entering any name should work, but some pokemon have an inconsistent naming structure so it's best to use the pokemon's offical ID. For example, the Pokemon "Zacian" has an ID of 888 but a labeled name of "Zacian-hero". Entering just "Zacian" will return with an error entering 888 will return the correct pokemon.
+For the most part entering any name should work, but some pokemon have an inconsistent naming structure so it's best to use the pokemon's offical ID. For example, the Pokemon "Zacian" has an ID of 888 but a labeled name of "Zacian-hero". Entering just "Zacian" will return with an error while entering 888 will return the correct pokemon.
 
 <div align="center">
 <img width="599" alt="zacian-hero" src="https://user-images.githubusercontent.com/86213479/149596347-a500f984-66de-41f6-aaf6-10fedba88049.png">
