@@ -1,3 +1,5 @@
+# Pokedex
+
 <div id="top"></div>
 
 
@@ -13,7 +15,6 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-<h3 align="center">Pokedex</h3>
 
   <p align="center">
 A jQuery based Pokedex that displays the photo, types, stats, description, and evolutionary stages of any requested Pokemon. 
